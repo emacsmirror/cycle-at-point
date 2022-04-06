@@ -8,7 +8,7 @@
 ;; Version: 0.1
 ;; Created: 2022-02-05
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "27.1") (recomplete "0.2"))
+;; Package-Requires: ((emacs "28.1") (recomplete "0.2"))
 
 ;; This file is NOT part of GNU Emacs.
 

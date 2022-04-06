@@ -1,7 +1,7 @@
 ;;; cycle-at-point-find-integer.el --- Integer finder -*- lexical-binding: t -*-
 ;; URL: https://gitlab.com/ideasman42/emacs-cycle-at-point
 ;; Version: 0.1
-;; Package-Requires: ((emacs "27.1"))
+;; Package-Requires: ((emacs "28.1"))
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
@@ -131,7 +131,7 @@ Optional keyword ARGS:
             ;; Strip prefix, also remove "_"
             (let ((text-eval (substring text (- (point) pt-start) nil)))
               (when underscore-sep
-                (setq text-eval (replace-regexp-in-string "_" "" text-eval)))
+                (setq text-eval (string-replace "_" "" text-eval)))
 
               (let ((num (string-to-number text-eval base)))
                 (dolist (base-data (list (cons 16 "0x") (cons 10 "") (cons 8 "0o") (cons 2 "0b")))
