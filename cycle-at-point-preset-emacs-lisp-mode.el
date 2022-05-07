@@ -1,5 +1,5 @@
 ;;; cycle-at-point-preset-emacs-lisp-mode.el --- ELISP preset -*- lexical-binding: t -*-
-;; URL: https://gitlab.com/ideasman42/emacs-cycle-at-point
+;; URL: https://codeberg.com/ideasman42/emacs-cycle-at-point
 ;; Version: 0.1
 ;; Package-Requires: ((emacs "27.1"))
 ;; SPDX-License-Identifier: GPL-3.0-or-later
