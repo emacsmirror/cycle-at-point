@@ -1,0 +1,3 @@
+*.elc
+/cycle-at-point-pkg.el
+/cycle-at-point-autoloads.el

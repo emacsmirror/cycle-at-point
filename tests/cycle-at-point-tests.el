@@ -25,6 +25,7 @@
 ;; ---------------------------------------------------------------------------
 ;; Setup Environment
 
+;; FIXME: The mere act of loading a file shouldn't cause such changes.
 (setq python-indent-guess-indent-offset nil)
 
 (add-to-list 'load-path (concat (file-name-directory load-file-name) ".."))
