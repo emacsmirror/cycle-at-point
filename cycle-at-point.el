@@ -208,7 +208,7 @@ Each list item can contain keyword/value pairs:
                           (not-found t))
                         (while (and not-found (< i words-length))
                           (cond
-                            ((match-string (1+ i))
+                            ((match-string-no-properties (1+ i))
                               (setq i (1- i))
                               (setq not-found nil))
                             (t
