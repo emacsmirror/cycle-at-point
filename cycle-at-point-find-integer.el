@@ -25,9 +25,11 @@ representation of NUMBER is smaller."
       (setq number (truncate number 2)))
     (let ((len (length nums)))
       (apply #'concat
-        (if (and width (< len width))
-          (make-string (- width len) fillchar)
-          "")
+        (cond
+          ((and width (< len width))
+            (make-string (- width len) fillchar))
+          (t
+            ""))
         nums))))
 
 (defun cycle-at-point-find-integer--format (num width base)
