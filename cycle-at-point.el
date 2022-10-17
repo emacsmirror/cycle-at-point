@@ -287,9 +287,7 @@ Argument FN-CACHE stores the result for reuse."
 
     (when result-choices
       (let ((word-at-index (nth (mod cycle-index (length result-choices)) result-choices)))
-        (goto-char word-beg)
-        (delete-region word-beg word-end)
-        (insert word-at-index))
+        (recomplete-replace-in-region word-at-index word-beg word-end))
 
       (list result-choices fn-cache))))
 
