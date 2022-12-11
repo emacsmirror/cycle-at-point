@@ -13,20 +13,18 @@
 
 (defun cycle-at-point-find-alphabet-ascii ()
   "Return alphabetical characters matching the symbol at-point."
-  (let
-    (
-      (result (list))
-      (word (bounds-of-thing-at-point 'symbol))
-      (word-upcase nil))
+  (let ((result (list))
+        (word (bounds-of-thing-at-point 'symbol))
+        (word-upcase nil))
     (when word
       (setq word (buffer-substring-no-properties (car word) (cdr word)))
       (when (eq 1 (length word))
         (setq word-upcase (upcase word))
         (when (string-match-p "[A-Z]" word-upcase)
           (setq result
-            (list
-              "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" ;; Alphabet literal.
-              "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z"))
+                (list
+                 "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" ;; Alphabet literal.
+                 "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z"))
           (unless (string-equal word word-upcase)
             (setq result (mapcar (lambda (w) (downcase w)) result))))))
     (list :data result)))

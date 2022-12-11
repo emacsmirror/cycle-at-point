@@ -12,28 +12,28 @@
 (defun cycle-at-point-preset-lang-en ()
   "Return a preset list compatible with `cycle-at-point-list'."
   (list
-    ;; Days of the week.
+   ;; Days of the week.
+   (list
+    :data (list "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY")
+    :case-fold t)
+   (list :data (list "MON" "TUE" "WED" "THU" "FRI" "SAT" "SUN") :case-fold t)
+   ;; Months of the year.
+   (list
+    :data
     (list
-      :data (list "MONDAY" "TUESDAY" "WEDNESDAY" "THURSDAY" "FRIDAY" "SATURDAY" "SUNDAY")
-      :case-fold t)
-    (list :data (list "MON" "TUE" "WED" "THU" "FRI" "SAT" "SUN") :case-fold t)
-    ;; Months of the year.
-    (list
-      :data
-      (list
-        "JANUARY"
-        "FEBRUARY"
-        "MARCH"
-        "APRIL"
-        "MAY"
-        "JUNE"
-        "JULY"
-        "AUGUST"
-        "SEPTEMBER"
-        "OCTOBER"
-        "NOVEMBER"
-        "DECEMBER")
-      :case-fold t)))
+     "JANUARY"
+     "FEBRUARY"
+     "MARCH"
+     "APRIL"
+     "MAY"
+     "JUNE"
+     "JULY"
+     "AUGUST"
+     "SEPTEMBER"
+     "OCTOBER"
+     "NOVEMBER"
+     "DECEMBER")
+    :case-fold t)))
 
 (provide 'cycle-at-point-preset-lang-en)
 ;;; cycle-at-point-preset-lang-en.el ends here
