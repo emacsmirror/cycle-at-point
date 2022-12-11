@@ -38,15 +38,14 @@
 ;; Simplify test declaration.
 (defmacro ert-deftest-decl-pair (test-id text-initial text-expected char-index mode)
   "Create a test named TEST-ID using TEXT-INITIAL TEXT-EXPECTED as a result."
-  `
-  (ert-deftest ,test-id ()
-    (with-temp-buffer
-      (buffer-enable-undo)
-      (funcall ,mode)
-      (insert ,text-initial)
-      (goto-char (+ (point-min) ,char-index))
-      (call-interactively 'cycle-at-point)
-      (should (equal ,text-expected (buffer-string))))))
+  `(ert-deftest ,test-id ()
+     (with-temp-buffer
+       (buffer-enable-undo)
+       (funcall ,mode)
+       (insert ,text-initial)
+       (goto-char (+ (point-min) ,char-index))
+       (call-interactively 'cycle-at-point)
+       (should (equal ,text-expected (buffer-string))))))
 
 ;; ---------------------------------------------------------------------------
 ;; Test (Basic)

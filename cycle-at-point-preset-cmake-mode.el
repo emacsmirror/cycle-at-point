@@ -15,12 +15,12 @@
   "Return a preset list compatible with `cycle-at-point-list'."
   ;; Note that CMAKE is case insensitive.
   (list
-    (list :data (list "TRUE" "FALSE") :case-fold t)
-    (list :data (list "ON" "OFF") :case-fold t)
-    (list :data (list "AND" "OR") :case-fold t)
-    (list :data (list "VERSION_LESS" "VERSION_GREATER") :case-fold t)
-    (list :data (list "VERSION_LESS_EQUAL" "VERSION_GREATER_EQUAL") :case-fold t)
-    (lambda () (cycle-at-point-find-alphabet-ascii))))
+   (list :data (list "TRUE" "FALSE") :case-fold t)
+   (list :data (list "ON" "OFF") :case-fold t)
+   (list :data (list "AND" "OR") :case-fold t)
+   (list :data (list "VERSION_LESS" "VERSION_GREATER") :case-fold t)
+   (list :data (list "VERSION_LESS_EQUAL" "VERSION_GREATER_EQUAL") :case-fold t)
+   (lambda () (cycle-at-point-find-alphabet-ascii))))
 
 (provide 'cycle-at-point-preset-cmake-mode)
 ;;; cycle-at-point-preset-cmake-mode.el ends here

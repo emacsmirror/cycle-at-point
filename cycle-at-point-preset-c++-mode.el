@@ -13,10 +13,10 @@
 (defun cycle-at-point-preset-c++-mode ()
   "Return a preset list compatible with `cycle-at-point-list'."
   (append
-    (cycle-at-point-preset-c-mode)
-    (list
-      ;; Mostly shared with C.
-      (list :data (list "public" "private")))))
+   (cycle-at-point-preset-c-mode)
+   (list
+    ;; Mostly shared with C.
+    (list :data (list "public" "private")))))
 
 (provide 'cycle-at-point-preset-c++-mode)
 ;;; cycle-at-point-preset-c++-mode.el ends here

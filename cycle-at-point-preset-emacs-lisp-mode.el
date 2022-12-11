@@ -14,16 +14,16 @@
 (defun cycle-at-point-preset-emacs-lisp-mode ()
   "Return a preset list compatible with `cycle-at-point-list'."
   (list
-    (list :data (list "t" "nil"))
-    (list :data (list "and" "or"))
-    (list :data (list "when" "unless"))
-    (list :data (list "<" ">"))
-    (list :data (list "/" "*"))
-    (list :data (list "+" "-"))
-    (list :data (list ">=" "<="))
-    (list :data (list "car" "cdr"))
-    (list :data (list "string-lessp" "string-greaterp"))
-    (lambda () (cycle-at-point-find-alphabet-ascii))))
+   (list :data (list "t" "nil"))
+   (list :data (list "and" "or"))
+   (list :data (list "when" "unless"))
+   (list :data (list "<" ">"))
+   (list :data (list "/" "*"))
+   (list :data (list "+" "-"))
+   (list :data (list ">=" "<="))
+   (list :data (list "car" "cdr"))
+   (list :data (list "string-lessp" "string-greaterp"))
+   (lambda () (cycle-at-point-find-alphabet-ascii))))
 
 (provide 'cycle-at-point-preset-emacs-lisp-mode)
 ;;; cycle-at-point-preset-emacs-lisp-mode.el ends here

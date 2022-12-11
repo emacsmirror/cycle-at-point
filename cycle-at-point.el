@@ -63,183 +63,171 @@ Each list item can contain keyword/value pairs:
 (defun cycle-at-point--cycle-words (cycle-data)
   "Return the bounds of the thing at point from CYCLE-DATA."
   (let
-    ( ;; Only for error messages.
-      (cycle-data-index 0)
-      (prefix "cycle-at-point")
-      (pt (point))
-      (line-beg (line-beginning-position))
-      (line-end (line-end-position))
+      ( ;; Only for error messages.
+       (cycle-data-index 0)
+       (prefix "cycle-at-point")
+       (pt (point))
+       (line-beg (line-beginning-position))
+       (line-end (line-end-position))
 
-      (result nil))
+       (result nil))
 
     (while (and (null result) cycle-data)
       (let
-        ( ;; Extract keyword arguments from `arg-data'.
-          (arg-data (pop cycle-data))
+          ( ;; Extract keyword arguments from `arg-data'.
+           (arg-data (pop cycle-data))
 
-          (arg-case-fold nil)
-          (arg-words nil))
+           (arg-case-fold nil)
+           (arg-words nil))
 
         ;; May be callable.
         (when (functionp arg-data)
           (condition-case-unless-debug err
-            (save-match-data
-              (save-excursion
-                (unless (eq (point) pt)
-                  (error "Internal error, unexpected point motion"))
-                (setq arg-data (funcall arg-data))))
+              (save-match-data
+                (save-excursion
+                  (unless (eq (point) pt)
+                    (error "Internal error, unexpected point motion"))
+                  (setq arg-data (funcall arg-data))))
             (error
-              (user-error
-                "%s: (error at index %d) unable to use callback (%S)"
-                prefix
-                cycle-data-index
-                err))))
+             (user-error "%s: (error at index %d) unable to use callback (%S)"
+                         prefix
+                         cycle-data-index
+                         err))))
 
         ;; Parse arguments.
         (while arg-data
           (let ((arg-current (pop arg-data)))
             (cond
-              ((keywordp arg-current)
-                (unless arg-data
-                  (user-error
-                    "%s: (error at index %d) keyword argument %S has no value!"
-                    prefix
-                    cycle-data-index
-                    arg-current))
-                (let ((v (pop arg-data)))
-                  (pcase arg-current
-                    (:data
-                      (cond
-                        ;; Callback to generate data.
-                        ((functionp v)
-                          (condition-case-unless-debug err
-                            (save-match-data
-                              (save-excursion
-                                (unless (eq (point) pt)
-                                  (error "Internal error, unexpected point motion"))
-                                (setq v (funcall v))
-                                (unless (listp v)
-                                  (error
-                                    "Expected a list of strings, not %S = %S" (type-of v) v))))
-                            (error
-                              (user-error
-                                "%s: (error at index %d), :data callback failure %S"
-                                prefix
-                                cycle-data-index
-                                err))))
-                        ((listp v))
-                        (t
-                          (error
-                            "%s: expected `:data', to be a list of strings, found %S"
+             ((keywordp arg-current)
+              (unless arg-data
+                (user-error "%s: (error at index %d) keyword argument %S has no value!"
                             prefix
-                            (type-of v))))
-                      (setq arg-words v))
-                    (:case-fold
-                      (cond
-                        ((memq v (list nil t)))
-                        (t
-                          (error "%s: expected `:case-fold', to be nil or t" prefix)))
-                      (setq arg-case-fold v))
-                    (_ (error "Unknown argument %S" arg-current)))))
-              (t
-                (user-error
-                  "%s: (error at index %d) all arguments must be keyword, value pairs, found %S"
-                  prefix
-                  cycle-data-index
-                  (type-of arg-current))))))
+                            cycle-data-index
+                            arg-current))
+              (let ((v (pop arg-data)))
+                (pcase arg-current
+                  (:data
+                   (cond
+                    ;; Callback to generate data.
+                    ((functionp v)
+                     (condition-case-unless-debug err
+                         (save-match-data
+                           (save-excursion
+                             (unless (eq (point) pt)
+                               (error "Internal error, unexpected point motion"))
+                             (setq v (funcall v))
+                             (unless (listp v)
+                               (error "Expected a list of strings, not %S = %S" (type-of v) v))))
+                       (error
+                        (user-error "%s: (error at index %d), :data callback failure %S"
+                                    prefix
+                                    cycle-data-index
+                                    err))))
+                    ((listp v))
+                    (t
+                     (error
+                      "%s: expected `:data', to be a list of strings, found %S"
+                      prefix
+                      (type-of v))))
+                   (setq arg-words v))
+                  (:case-fold
+                   (cond
+                    ((memq v (list nil t)))
+                    (t
+                     (error "%s: expected `:case-fold', to be nil or t" prefix)))
+                   (setq arg-case-fold v))
+                  (_ (error "Unknown argument %S" arg-current)))))
+             (t
+              (user-error
+               "%s: (error at index %d) all arguments must be keyword, value pairs, found %S"
+               prefix
+               cycle-data-index
+               (type-of arg-current))))))
         ;; Done parsing arguments.
 
-        (let*
-          (
-            (case-fold-search arg-case-fold)
-            (words-max 0)
-            (words-length 0)
-            (words-regex
-              (concat
-                (mapconcat
-                  #'
-                  (lambda (literal)
-                    (setq words-max (max words-max (length literal)))
-                    (setq words-length (1+ words-length))
-                    ;; Use groups so they can be checked.
-                    (concat "\\(" (regexp-quote literal) "\\)"))
-                  arg-words "\\|")))
+        (let* ((case-fold-search arg-case-fold)
+               (words-max 0)
+               (words-length 0)
+               (words-regex
+                (concat
+                 (mapconcat #'(lambda (literal)
+                                (setq words-max (max words-max (length literal)))
+                                (setq words-length (1+ words-length))
+                                ;; Use groups so they can be checked.
+                                (concat "\\(" (regexp-quote literal) "\\)"))
+                            arg-words
+                            "\\|")))
 
-            ;; Anything outside this range wont overlap `pt'.
-            (search-min (max (- pt words-max) line-beg))
-            (search-max (min (+ pt words-max) line-end)))
+               ;; Anything outside this range wont overlap `pt'.
+               (search-min (max (- pt words-max) line-beg))
+               (search-max (min (+ pt words-max) line-end)))
 
           (save-match-data
             (save-excursion
               (goto-char search-min)
               (while (and (< (point) search-max) (re-search-forward words-regex search-max t))
-                (let
-                  (
-                    (beg (match-beginning 0))
-                    (end (match-end 0)))
+                (let ((beg (match-beginning 0))
+                      (end (match-end 0)))
 
                   ;; Even if the point has been found,
                   ;; it's possible the word found was shorter, meaning the point is not over it.
                   (cond
-                    ;; Keep searching.
-                    ((< end pt)
-                      (goto-char (1+ beg)))
-                    ;; Stop searching (past the point).
-                    ((< pt beg)
-                      (goto-char search-max))
+                   ;; Keep searching.
+                   ((< end pt)
+                    (goto-char (1+ beg)))
+                   ;; Stop searching (past the point).
+                   ((< pt beg)
+                    (goto-char search-max))
 
-                    ;; Overlapping match, now check delimiters (via syntax table).
+                   ;; Overlapping match, now check delimiters (via syntax table).
 
-                    ;; Delimit on unchanged syntax-class at the beginning.
-                    ((and (< line-beg beg) (eq (syntax-after beg) (syntax-after (1- beg))))
-                      ;; This match doesn't end at delimiters, keep searching.
-                      (goto-char (1+ beg)))
+                   ;; Delimit on unchanged syntax-class at the beginning.
+                   ((and (< line-beg beg) (eq (syntax-after beg) (syntax-after (1- beg))))
+                    ;; This match doesn't end at delimiters, keep searching.
+                    (goto-char (1+ beg)))
 
-                    ;; Delimit on unchanged syntax-class at the end.
-                    ((and (< end line-end) (eq (syntax-after end) (syntax-after (1- end))))
-                      ;; This match doesn't end at delimiters, keep searching.
-                      (goto-char (1+ beg)))
+                   ;; Delimit on unchanged syntax-class at the end.
+                   ((and (< end line-end) (eq (syntax-after end) (syntax-after (1- end))))
+                    ;; This match doesn't end at delimiters, keep searching.
+                    (goto-char (1+ beg)))
 
-                    ;; Cycle word list!
-                    (t
-                      (let
-                        (
-                          (i 0)
+                   ;; Cycle word list!
+                   (t
+                    (let ((i 0)
                           (not-found t))
-                        (while (and not-found (< i words-length))
-                          (cond
-                            ((match-string-no-properties (1+ i))
-                              (setq i (1- i))
-                              (setq not-found nil))
-                            (t
-                              (setq i (1+ i)))))
+                      (while (and not-found (< i words-length))
+                        (cond
+                         ((match-string-no-properties (1+ i))
+                          (setq i (1- i))
+                          (setq not-found nil))
+                         (t
+                          (setq i (1+ i)))))
 
-                        ;; Move the current word last.
-                        (setq i (mod (1+ i) words-length))
-                        (let ((word-orig (buffer-substring-no-properties beg end)))
-                          ;; Match the case of the existing word (when case is folded).
-                          (when arg-case-fold
-                            (setq arg-words
-                              (cond
-                                ((string-equal (upcase word-orig) word-orig)
-                                  (mapcar (lambda (w) (upcase w)) arg-words))
-                                ((string-equal (downcase word-orig) word-orig)
-                                  (mapcar (lambda (w) (downcase w)) arg-words))
-                                (t
-                                  (mapcar
-                                    (lambda (w) (upcase-initials (downcase w))) arg-words)))))
-
+                      ;; Move the current word last.
+                      (setq i (mod (1+ i) words-length))
+                      (let ((word-orig (buffer-substring-no-properties beg end)))
+                        ;; Match the case of the existing word (when case is folded).
+                        (when arg-case-fold
                           (setq arg-words
-                            (append (seq-subseq arg-words i) (seq-subseq arg-words 0 i)))
+                                (cond
+                                 ((string-equal (upcase word-orig) word-orig)
+                                  (mapcar (lambda (w) (upcase w)) arg-words))
+                                 ((string-equal (downcase word-orig) word-orig)
+                                  (mapcar (lambda (w) (downcase w)) arg-words))
+                                 (t
+                                  (mapcar (lambda (w) (upcase-initials (downcase w))) arg-words)))))
 
-                          ;; Include this literal word
-                          ;; in case of minor differences in case or spacing.
-                          (setq arg-words (cons word-orig (cdr arg-words)))
+                        (setq arg-words
+                              (append (seq-subseq arg-words i) (seq-subseq arg-words 0 i)))
 
-                          (unless (string-equal (downcase (car arg-words)) (downcase word-orig))
-                            (error "Internal error"))))
+                        ;; Include this literal word
+                        ;; in case of minor differences in case or spacing.
+                        (setq arg-words (cons word-orig (cdr arg-words)))
 
-                      (setq result (cons arg-words (cons beg end)))))))))))
+                        (unless (string-equal (downcase (car arg-words)) (downcase word-orig))
+                          (error "Internal error"))))
+
+                    (setq result (cons arg-words (cons beg end)))))))))))
       (setq cycle-data-index (1+ cycle-data-index)))
 
     (or result (cons nil nil))))
@@ -247,14 +235,14 @@ Each list item can contain keyword/value pairs:
 (defun cycle-at-point--impl-cycle-get-data-for-mode ()
   "Return data associated with a major mode."
   (cond
-    (cycle-at-point-list
-      cycle-at-point-list)
-    (t
-      (let ((preset (cycle-at-point-preset nil t)))
-        (unless preset
-          ;; TODO: detect language.
-          (setq preset (cycle-at-point-preset "lang-en")))
-        preset))))
+   (cycle-at-point-list
+    cycle-at-point-list)
+   (t
+    (let ((preset (cycle-at-point-preset nil t)))
+      (unless preset
+        ;; TODO: detect language.
+        (setq preset (cycle-at-point-preset "lang-en")))
+      preset))))
 
 (defun cycle-at-point-impl (cycle-index fn-cache)
   "Cycle case styles using the choice at CYCLE-INDEX.
@@ -264,23 +252,23 @@ Argument FN-CACHE stores the result for reuse."
     (unless result-choices
       (let ((cycle-data (cycle-at-point--impl-cycle-get-data-for-mode)))
         (cond
-          ((null cycle-data)
-            (message "No cycle for mode %S" major-mode))
-          (t
-            (pcase-let ((`(,words . (,beg . ,end)) (cycle-at-point--cycle-words cycle-data)))
-              (cond
-                ((null words)
-                  (message "No cycle symbol found at point!"))
-                (t
-                  (let ((target (buffer-substring-no-properties beg end)))
-                    (cond
-                      ((null target)
-                        ;; Trim the string since it can contain newlines.
-                        (message "No cycle for %S found!" (string-trim target)))
-                      (t
-                        (setq result-choices words)
-                        (setq word-beg beg)
-                        (setq word-end end))))))))))
+         ((null cycle-data)
+          (message "No cycle for mode %S" major-mode))
+         (t
+          (pcase-let ((`(,words . (,beg . ,end)) (cycle-at-point--cycle-words cycle-data)))
+            (cond
+             ((null words)
+              (message "No cycle symbol found at point!"))
+             (t
+              (let ((target (buffer-substring-no-properties beg end)))
+                (cond
+                 ((null target)
+                  ;; Trim the string since it can contain newlines.
+                  (message "No cycle for %S found!" (string-trim target)))
+                 (t
+                  (setq result-choices words)
+                  (setq word-beg beg)
+                  (setq word-end end))))))))))
 
       (when result-choices
         (setq fn-cache (list result-choices word-beg word-end))))
@@ -304,15 +292,14 @@ when the preset isn't found."
   (unless preset-id
     (setq preset-id (symbol-name major-mode)))
   (let ((preset-sym (intern (concat "cycle-at-point-preset-" preset-id))))
-    (when
-      (condition-case err
-        (progn
-          (require preset-sym)
-          t)
-        (error
-          (unless quiet
-            (message "cycle-at-point: preset %S not found! (%S)" preset-id err))
-          nil))
+    (when (condition-case err
+              (progn
+                (require preset-sym)
+                t)
+            (error
+             (unless quiet
+               (message "cycle-at-point: preset %S not found! (%S)" preset-id err))
+             nil))
       (funcall preset-sym))))
 
 ;;;###autoload
