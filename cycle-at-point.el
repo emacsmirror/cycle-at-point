@@ -150,11 +150,11 @@ Each list item can contain keyword/value pairs:
                (words-length 0)
                (words-regex
                 (concat
-                 (mapconcat #'(lambda (literal)
-                                (setq words-max (max words-max (length literal)))
-                                (setq words-length (1+ words-length))
-                                ;; Use groups so they can be checked.
-                                (concat "\\(" (regexp-quote literal) "\\)"))
+                 (mapconcat (lambda (literal)
+                              (setq words-max (max words-max (length literal)))
+                              (setq words-length (1+ words-length))
+                              ;; Use groups so they can be checked.
+                              (concat "\\(" (regexp-quote literal) "\\)"))
                             arg-words
                             "\\|")))
 
@@ -215,7 +215,9 @@ Each list item can contain keyword/value pairs:
                                  ((string-equal (downcase word-orig) word-orig)
                                   (mapcar (lambda (w) (downcase w)) arg-words))
                                  (t
-                                  (mapcar (lambda (w) (upcase-initials (downcase w))) arg-words)))))
+                                  (mapcar
+                                   (lambda (w) (upcase-initials (downcase w)))
+                                   arg-words)))))
 
                         (setq arg-words
                               (append (seq-subseq arg-words i) (seq-subseq arg-words 0 i)))
