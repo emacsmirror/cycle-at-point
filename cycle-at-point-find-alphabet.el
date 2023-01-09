@@ -30,4 +30,8 @@
     (list :data result)))
 
 (provide 'cycle-at-point-find-alphabet)
+;; Local Variables:
+;; fill-column: 99
+;; indent-tabs-mode: nil
+;; End:
 ;;; cycle-at-point-find-alphabet.el ends here

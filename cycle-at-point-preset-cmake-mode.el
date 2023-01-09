@@ -23,4 +23,8 @@
    (lambda () (cycle-at-point-find-alphabet-ascii))))
 
 (provide 'cycle-at-point-preset-cmake-mode)
+;; Local Variables:
+;; fill-column: 99
+;; indent-tabs-mode: nil
+;; End:
 ;;; cycle-at-point-preset-cmake-mode.el ends here

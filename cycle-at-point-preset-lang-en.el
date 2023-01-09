@@ -36,4 +36,8 @@
     :case-fold t)))
 
 (provide 'cycle-at-point-preset-lang-en)
+;; Local Variables:
+;; fill-column: 99
+;; indent-tabs-mode: nil
+;; End:
 ;;; cycle-at-point-preset-lang-en.el ends here
