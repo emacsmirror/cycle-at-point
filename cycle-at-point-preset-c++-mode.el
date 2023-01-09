@@ -19,4 +19,8 @@
     (list :data (list "public" "private")))))
 
 (provide 'cycle-at-point-preset-c++-mode)
+;; Local Variables:
+;; fill-column: 99
+;; indent-tabs-mode: nil
+;; End:
 ;;; cycle-at-point-preset-c++-mode.el ends here

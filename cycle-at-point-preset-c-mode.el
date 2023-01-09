@@ -34,4 +34,8 @@
    (lambda () (cycle-at-point-find-integer-bases :bases (list 10 16)))))
 
 (provide 'cycle-at-point-preset-c-mode)
+;; Local Variables:
+;; fill-column: 99
+;; indent-tabs-mode: nil
+;; End:
 ;;; cycle-at-point-preset-c-mode.el ends here

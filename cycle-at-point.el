@@ -310,4 +310,8 @@ ARG is the offset to cycle, default is 1, -1 to cycle backwards."
   (recomplete-with-callback 'cycle-at-point-impl arg 1))
 
 (provide 'cycle-at-point)
+;; Local Variables:
+;; fill-column: 99
+;; indent-tabs-mode: nil
+;; End:
 ;;; cycle-at-point.el ends here

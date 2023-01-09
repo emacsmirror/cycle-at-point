@@ -78,4 +78,8 @@
 (ert-deftest-decl-pair py-number-binary-to-octal "0b101010" "0o52" 0 'python-mode)
 
 (provide 'cycle-at-point-tests)
+;; Local Variables:
+;; fill-column: 99
+;; indent-tabs-mode: nil
+;; End:
 ;;; cycle-at-point-tests.el ends here
