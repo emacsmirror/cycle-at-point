@@ -22,7 +22,7 @@
 ;; ---------------------------------------------------------------------------
 ;; Require Dependencies
 
-(require 'recomplete) ;; `recomplete-with-callback'.
+(require 'recomplete) ; `recomplete-with-callback'.
 
 (eval-when-compile
   (require 'cycle-at-point-find-alphabet)
@@ -62,23 +62,20 @@ Each list item can contain keyword/value pairs:
 
 (defun cycle-at-point--cycle-words (cycle-data)
   "Return the bounds of the thing at point from CYCLE-DATA."
-  (let
-      ( ;; Only for error messages.
-       (cycle-data-index 0)
-       (prefix "cycle-at-point")
-       (pt (point))
-       (line-beg (line-beginning-position))
-       (line-end (line-end-position))
+  (let ((cycle-data-index 0) ; Only for error messages.
+        (prefix "cycle-at-point")
+        (pt (point))
+        (line-beg (line-beginning-position))
+        (line-end (line-end-position))
 
-       (result nil))
+        (result nil))
 
     (while (and (null result) cycle-data)
-      (let
-          ( ;; Extract keyword arguments from `arg-data'.
-           (arg-data (pop cycle-data))
+      ;; Extract keyword arguments from `arg-data'.
+      (let ((arg-data (pop cycle-data))
 
-           (arg-case-fold nil)
-           (arg-words nil))
+            (arg-case-fold nil)
+            (arg-words nil))
 
         ;; May be callable.
         (when (functionp arg-data)

@@ -9,7 +9,7 @@
 
 ;;; Code:
 
-(require 'thingatpt) ;; `bounds-of-thing-at-point'.
+(require 'thingatpt) ; `bounds-of-thing-at-point'.
 
 (defun cycle-at-point-find-alphabet-ascii ()
   "Return alphabetical characters matching the symbol at-point."
@@ -23,7 +23,7 @@
         (when (string-match-p "[A-Z]" word-upcase)
           (setq result
                 (list
-                 "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" ;; Alphabet literal.
+                 "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" ; Alphabet literal.
                  "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z"))
           (unless (string-equal word word-upcase)
             (setq result (mapcar (lambda (w) (downcase w)) result))))))
