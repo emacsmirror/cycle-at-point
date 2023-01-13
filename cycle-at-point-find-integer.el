@@ -60,7 +60,7 @@ Optional keyword ARGS:
         (any-chars "")
         (any-prefix "")
         (pt-init (point))
-        (pt-beg (line-beginning-position))
+        (pt-beg (pos-bol))
         (result nil))
 
     (dolist (base supported-bases)
@@ -79,7 +79,7 @@ Optional keyword ARGS:
 
     (save-excursion
       ;; Important not to skip over non-numbers.
-      (goto-char (min (1+ (point)) (line-end-position)))
+      (goto-char (min (1+ (point)) (pos-eol)))
       (when (zerop
              (skip-chars-backward (concat
                                    any-chars any-prefix

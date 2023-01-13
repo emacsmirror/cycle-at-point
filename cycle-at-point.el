@@ -65,8 +65,8 @@ Each list item can contain keyword/value pairs:
   (let ((cycle-data-index 0) ; Only for error messages.
         (prefix "cycle-at-point")
         (pt (point))
-        (line-beg (line-beginning-position))
-        (line-end (line-end-position))
+        (line-beg (pos-bol))
+        (line-end (pos-eol))
 
         (result nil))
 
