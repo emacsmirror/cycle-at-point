@@ -154,9 +154,7 @@ Each list item can contain keyword/value pairs:
              (t
               (user-error
                "%s: (error at index %d) all arguments must be keyword, value pairs, found %S"
-               prefix
-               cycle-data-index
-               (type-of arg-current))))))
+               prefix cycle-data-index (type-of arg-current))))))
         ;; Done parsing arguments.
 
         (let* ((case-fold-search arg-case-fold)
@@ -230,8 +228,7 @@ Each list item can contain keyword/value pairs:
                                   (mapcar (lambda (w) (downcase w)) arg-words))
                                  (t
                                   (mapcar
-                                   (lambda (w) (upcase-initials (downcase w)))
-                                   arg-words)))))
+                                   (lambda (w) (upcase-initials (downcase w))) arg-words)))))
 
                         (setq arg-words
                               (append (seq-subseq arg-words i) (seq-subseq arg-words 0 i)))
