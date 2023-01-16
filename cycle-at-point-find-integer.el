@@ -140,8 +140,7 @@ Optional keyword ARGS:
                               (when c-is-upper
                                 (setq base-prefix (upcase base-prefix)))
                               (concat
-                               base-prefix
-                               (cycle-at-point-find-integer--format num 1 base-iter))))
+                               base-prefix (cycle-at-point-find-integer--format num 1 base-iter))))
                             result))))))))))
     (list :data result)))
 
