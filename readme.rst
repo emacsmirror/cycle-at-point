@@ -112,6 +112,10 @@ Key binding example, using ``Alt-Shift-P``:
 Customization
 -------------
 
+``cycle-at-point-preset-override``
+   The identifier to use when loading a preset, this can be useful if you wish the use the preset
+   from a different major-mode (especially in the case of tree-sitter major modes).
+
 ``cycle-at-point-list``
    Setting this value is optional, when left unset a preset will be used when available.
 

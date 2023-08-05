@@ -54,6 +54,11 @@
 ;; ---------------------------------------------------------------------------
 ;; Custom Variables
 
+(defcustom cycle-at-point-preset-override nil
+  "The symbol to use for the preset, when nil the `major-mode' is used.
+You may wish to override this value to us a preset from a different major mode."
+  :type '(choice (const nil) string))
+
 (defvar-local cycle-at-point-list nil
   "Buffer local list of literals to cycle.
 
@@ -303,7 +308,12 @@ The first is PRESET-ID to override the current `major-mode'.
 The second is QUIET, when non-nil, don't show a message
 when the preset isn't found."
   (unless preset-id
-    (setq preset-id (symbol-name major-mode)))
+    (setq preset-id
+          (cond
+           (cycle-at-point-preset-override
+            cycle-at-point-preset-override)
+           (t
+            (symbol-name major-mode)))))
   (let ((preset-sym (intern (concat "cycle-at-point-preset-" preset-id))))
     (when (condition-case err
               (progn
