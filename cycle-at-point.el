@@ -8,7 +8,7 @@
 ;; Version: 0.1
 ;; Created: 2022-02-05
 ;; Keywords: convenience
-;; Package-Requires: ((emacs "28.1") (recomplete "0.2"))
+;; Package-Requires: ((emacs "29.1") (recomplete "0.2"))
 
 ;; This file is NOT part of GNU Emacs.
 
@@ -33,22 +33,6 @@
   (require 'cycle-at-point-preset-emacs-lisp-mode)
   (require 'cycle-at-point-preset-lang-en)
   (require 'cycle-at-point-preset-python-mode))
-
-
-;; ---------------------------------------------------------------------------
-;; Compatibility
-
-(when (and (version< emacs-version "29.1") (not (and (fboundp 'pos-bol) (fboundp 'pos-eol))))
-  (defun pos-bol (&optional n)
-    "Return the position at the line beginning."
-    (declare (side-effect-free t))
-    (let ((inhibit-field-text-motion t))
-      (line-beginning-position n)))
-  (defun pos-eol (&optional n)
-    "Return the position at the line end."
-    (declare (side-effect-free t))
-    (let ((inhibit-field-text-motion t))
-      (line-end-position n))))
 
 
 ;; ---------------------------------------------------------------------------

@@ -1,7 +1,7 @@
 ;;; cycle-at-point-find-integer.el --- Integer finder -*- lexical-binding: t -*-
 ;; URL: https://codeberg.org/ideasman42/emacs-cycle-at-point
 ;; Version: 0.1
-;; Package-Requires: ((emacs "28.1"))
+;; Package-Requires: ((emacs "29.1"))
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
 ;;; Commentary:
