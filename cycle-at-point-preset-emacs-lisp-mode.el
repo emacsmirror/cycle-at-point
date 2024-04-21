@@ -13,6 +13,7 @@
 
 (defun cycle-at-point-preset-emacs-lisp-mode ()
   "Return a preset list compatible with `cycle-at-point-list'."
+  (declare (important-return-value t))
   (list
    (list :data (list "t" "nil"))
    (list :data (list "and" "or"))

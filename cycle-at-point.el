@@ -68,6 +68,7 @@ Each list item can contain keyword/value pairs:
 
 (defun cycle-at-point--cycle-words (cycle-data)
   "Return the bounds of the thing at point from CYCLE-DATA."
+  (declare (important-return-value t))
   (let ((cycle-data-index 0) ; Only for error messages.
         (prefix "cycle-at-point")
         (pt (point))
@@ -236,6 +237,7 @@ Each list item can contain keyword/value pairs:
 
 (defun cycle-at-point--impl-cycle-get-data-for-mode ()
   "Return data associated with a major mode."
+  (declare (important-return-value t))
   (cond
    (cycle-at-point-list
     cycle-at-point-list)
@@ -249,6 +251,7 @@ Each list item can contain keyword/value pairs:
 (defun cycle-at-point-impl (cycle-index fn-cache)
   "Cycle case styles using the choice at CYCLE-INDEX.
 Argument FN-CACHE stores the result for reuse."
+  (declare (important-return-value t))
   (pcase-let ((`(,result-choices ,word-beg ,word-end) (or fn-cache '(nil nil nil))))
     ;; Call when not cached.
     (unless result-choices
@@ -291,6 +294,7 @@ Argument FN-CACHE stores the result for reuse."
 The first is PRESET-ID to override the current `major-mode'.
 The second is QUIET, when non-nil, don't show a message
 when the preset isn't found."
+  (declare (important-return-value t))
   (unless preset-id
     (setq preset-id
           (cond
@@ -313,6 +317,7 @@ when the preset isn't found."
 (defun cycle-at-point (arg)
   "Cycle through a list of known values.
 ARG is the offset to cycle, default is 1, -1 to cycle backwards."
+  (declare (important-return-value nil))
   (interactive "p")
   ;; Pass 1 to start at the second item (the current word is always the first).
   (recomplete-with-callback 'cycle-at-point-impl arg 1))

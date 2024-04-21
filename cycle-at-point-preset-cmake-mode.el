@@ -13,6 +13,7 @@
 
 (defun cycle-at-point-preset-cmake-mode ()
   "Return a preset list compatible with `cycle-at-point-list'."
+  (declare (important-return-value t))
   ;; Note that CMAKE is case insensitive.
   (list
    (list :data (list "TRUE" "FALSE") :case-fold t)

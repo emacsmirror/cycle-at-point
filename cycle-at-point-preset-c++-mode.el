@@ -12,6 +12,7 @@
 (require 'cycle-at-point-preset-c-mode)
 (defun cycle-at-point-preset-c++-mode ()
   "Return a preset list compatible with `cycle-at-point-list'."
+  (declare (important-return-value t))
   (append
    (cycle-at-point-preset-c-mode)
    (list

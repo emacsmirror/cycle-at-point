@@ -14,6 +14,7 @@
 
 (defun cycle-at-point-preset-python-mode ()
   "Return a preset list compatible with `cycle-at-point-list'."
+  (declare (important-return-value t))
   (list
    (list :data (list "True" "False"))
    (list :data (list "&" "|"))

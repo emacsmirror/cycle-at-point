@@ -16,6 +16,7 @@
   "Format NUMBER as binary.
 Fill up to WIDTH with FILLCHAR (defaults to ?0) if binary
 representation of NUMBER is smaller."
+  (declare (important-return-value t))
   (let ((nums (list))
         (fillchar (or fillchar ?0)))
     (while (> number 0)
@@ -32,6 +33,7 @@ representation of NUMBER is smaller."
 
 (defun cycle-at-point-find-integer--format (num width base)
   "Format NUM with at least WIDTH space in BASE."
+  (declare (important-return-value t))
   (cond
    ((eq base 2)
     (cycle-at-point-find-integer--format-binary num width))
@@ -55,6 +57,7 @@ Optional keyword ARGS:
   A list of bases which this mode supports.
 `:undescore-sep'
   When true, ignore underscores."
+  (declare (important-return-value t))
   (let ((supported-bases (plist-get args :bases))
         (underscore-sep (plist-get args :underscore-sep))
         (any-chars "")

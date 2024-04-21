@@ -13,6 +13,7 @@
 
 (defun cycle-at-point-find-alphabet-ascii ()
   "Return alphabetical characters matching the symbol at-point."
+  (declare (important-return-value t))
   (let ((result (list))
         (word (bounds-of-thing-at-point 'symbol))
         (word-upcase nil))

@@ -11,6 +11,7 @@
 
 (defun cycle-at-point-preset-lang-en ()
   "Return a preset list compatible with `cycle-at-point-list'."
+  (declare (important-return-value t))
   (list
    ;; Days of the week.
    (list
