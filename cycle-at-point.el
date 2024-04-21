@@ -4,7 +4,7 @@
 ;; Copyright (C) 2022 Campbell Barton
 
 ;; Author: Campbell Barton
-;; URL: https://codeberg.com/ideasman42/emacs-cycle-at-point
+;; URL: https://codeberg.org/ideasman42/emacs-cycle-at-point
 ;; Version: 0.1
 ;; Created: 2022-02-05
 ;; Keywords: convenience
