@@ -1,11 +1,11 @@
 ;;; cycle-at-point.el --- Cycle (rotate) the thing under the cursor -*- lexical-binding: t -*-
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
-;; Copyright (C) 2022 Campbell Barton
+;; Copyright (C) 2022-2024 Campbell Barton
 
 ;; Author: Campbell Barton <ideasman42@gmail.com>
 ;; URL: https://codeberg.org/ideasman42/emacs-cycle-at-point
-;; Version: 0.1
+;; Version: 0.2
 ;; Created: 2022-02-05
 ;; Keywords: convenience
 ;; Package-Requires: ((emacs "29.1") (recomplete "0.2"))
