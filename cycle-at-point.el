@@ -4,6 +4,7 @@
 ;; Copyright (C) 2022-2024 Campbell Barton
 
 ;; Author: Campbell Barton <ideasman42@gmail.com>
+;; Maintainer: Campbell Barton <ideasman42@gmail.com>
 ;; URL: https://codeberg.org/ideasman42/emacs-cycle-at-point
 ;; Version: 0.2
 ;; Created: 2022-02-05
