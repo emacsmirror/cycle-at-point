@@ -130,10 +130,9 @@ Each list item can contain keyword/value pairs:
                                     err))))
                     ((listp v))
                     (t
-                     (error
-                      "%s: expected `:data', to be a list of strings, found %S"
-                      prefix
-                      (type-of v))))
+                     (error "%s: expected `:data', to be a list of strings, found %S"
+                            prefix
+                            (type-of v))))
                    (setq arg-words v))
                   (:case-fold
                    (cond
@@ -308,10 +307,9 @@ when the preset isn't found."
               (progn
                 (require preset-sym)
                 t)
-            (error
-             (unless quiet
-               (message "cycle-at-point: preset %S not found! (%S)" preset-id err))
-             nil))
+            (error (unless quiet
+                     (message "cycle-at-point: preset %S not found! (%S)" preset-id err))
+                   nil))
       (funcall preset-sym))))
 
 ;;;###autoload
