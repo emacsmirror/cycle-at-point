@@ -317,7 +317,7 @@ when the preset isn't found."
   "Cycle through a list of known values.
 ARG is the offset to cycle, default is 1, -1 to cycle backwards."
   (declare (important-return-value nil))
-  (interactive "p")
+  (interactive "*p")
   ;; Pass 1 to start at the second item (the current word is always the first).
   (recomplete-with-callback 'cycle-at-point-impl arg 1))
 
