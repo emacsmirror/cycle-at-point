@@ -307,9 +307,10 @@ when the preset isn't found."
               (progn
                 (require preset-sym)
                 t)
-            (error (unless quiet
-                     (message "cycle-at-point: preset %S not found! (%S)" preset-id err))
-                   nil))
+            (error
+             (unless quiet
+               (message "cycle-at-point: preset %S not found! (%S)" preset-id err))
+             nil))
       (funcall preset-sym))))
 
 ;;;###autoload
