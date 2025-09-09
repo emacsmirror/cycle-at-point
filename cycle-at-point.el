@@ -154,7 +154,7 @@ Each list item can contain keyword/value pairs:
                 (concat
                  (mapconcat (lambda (literal)
                               (setq words-max (max words-max (length literal)))
-                              (setq words-length (1+ words-length))
+                              (incf words-length)
                               ;; Use groups so they can be checked.
                               (concat "\\(" (regexp-quote literal) "\\)"))
                             arg-words
@@ -200,10 +200,10 @@ Each list item can contain keyword/value pairs:
                       (while (and not-found (< i words-length))
                         (cond
                          ((match-string-no-properties (1+ i))
-                          (setq i (1- i))
+                          (decf i)
                           (setq not-found nil))
                          (t
-                          (setq i (1+ i)))))
+                          (incf i))))
 
                       ;; Move the current word last.
                       (setq i (mod (1+ i) words-length))
@@ -231,7 +231,7 @@ Each list item can contain keyword/value pairs:
                           (error "Internal error"))))
 
                     (setq result (cons arg-words (cons beg end)))))))))))
-      (setq cycle-data-index (1+ cycle-data-index)))
+      (incf cycle-data-index))
 
     (or result (cons nil nil))))
 
