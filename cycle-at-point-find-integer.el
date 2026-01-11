@@ -55,8 +55,8 @@ representation of NUMBER is smaller."
 Optional keyword ARGS:
 :bases
   A list of bases which this mode supports.
-`:undescore-sep'
-  When true, ignore underscores."
+`:underscore-sep'
+  When non-nil, ignore underscores."
   (declare (important-return-value t))
   (let ((supported-bases (plist-get args :bases))
         (underscore-sep (plist-get args :underscore-sep))

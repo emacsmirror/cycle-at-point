@@ -1,4 +1,4 @@
-;;; cycle-at-point.el --- Cycle (rotate) the thing under the cursor -*- lexical-binding: t -*-
+;;; cycle-at-point.el --- Cycle (rotate) the word at point -*- lexical-binding: t -*-
 
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 ;; Copyright (C) 2022-2024 Campbell Barton
@@ -15,8 +15,8 @@
 
 ;;; Commentary:
 
-;; M-x cycle-at-point cycles the point at the cursor,
-;; this should be bound to a key.
+;; M-x cycle-at-point cycles the word at point.
+;; This command should be bound to a key.
 
 ;;; Code:
 
@@ -57,16 +57,14 @@
 ;; Custom Variables
 
 (defcustom cycle-at-point-preset-override nil
-  "The symbol to use for the preset, when nil the `major-mode' is used.
-You may wish to override this value to us a preset from a different major mode."
+  "The preset name to use, when nil the `major-mode' name is used.
+You may wish to override this value to use a preset from a different major mode."
   :type '(choice (const nil) string))
 
 (defvar-local cycle-at-point-list nil
   "Buffer local list of literals to cycle.
 
-A function that returns a list is also supported.
-
-When left unset this this auto-detected from the mode.
+When left unset, this is auto-detected from the mode.
 
 Each list item can contain keyword/value pairs:
 
@@ -77,7 +75,7 @@ Each list item can contain keyword/value pairs:
   Where the value is a boolean for case insensitive matching
   (optional, nil by default).
 
-  When true, matching the literals is case insensitive.
+  When non-nil, matching the literals is case insensitive.
   Replacements follow the current case: lower, upper or title-case.")
 
 
@@ -85,7 +83,8 @@ Each list item can contain keyword/value pairs:
 ;; Private Functions
 
 (defun cycle-at-point--cycle-words (cycle-data)
-  "Return the bounds of the thing at point from CYCLE-DATA."
+  "Return (WORDS . (BEG . END)) for cycleable thing at point, or (nil . nil).
+Argument CYCLE-DATA is the list of cycle definitions to search."
   (declare (important-return-value t))
   (let ((cycle-data-index 0) ; Only for error messages.
         (prefix "cycle-at-point")
@@ -122,7 +121,7 @@ Each list item can contain keyword/value pairs:
             (cond
              ((keywordp arg-current)
               (unless arg-data
-                (user-error "%s: (error at index %d) keyword argument %S has no value!"
+                (user-error "%s: (error at index %d) keyword argument %S has no value"
                             prefix
                             cycle-data-index
                             arg-current))
@@ -139,13 +138,14 @@ Each list item can contain keyword/value pairs:
                                (error "Internal error, unexpected point motion"))
                              (setq v (funcall v))
                              (unless (listp v)
-                               (error "Expected a list of strings, not %S = %S" (type-of v) v))))
+                               (error "Expected a list of strings, not %S: %S" (type-of v) v))))
                        (error
-                        (user-error "%s: (error at index %d), :data callback failure %S"
+                        (user-error "%s: (error at index %d) :data callback failure %S"
                                     prefix
                                     cycle-data-index
                                     err))))
-                    ((listp v))
+                    ((listp v)
+                     nil) ; Valid: list of strings, continue.
                     (t
                      (error "%s: expected `:data', to be a list of strings, found %S"
                             prefix
@@ -153,11 +153,12 @@ Each list item can contain keyword/value pairs:
                    (setq arg-words v))
                   (:case-fold
                    (cond
-                    ((memq v (list nil t)))
+                    ((memq v '(nil t))
+                     nil) ; Valid boolean, continue.
                     (t
                      (error "%s: expected `:case-fold', to be nil or t" prefix)))
                    (setq arg-case-fold v))
-                  (_ (error "Unknown argument %S" arg-current)))))
+                  (_ (error "%s: unknown argument %S" prefix arg-current)))))
              (t
               (user-error
                "%s: (error at index %d) all arguments must be keyword, value pairs, found %S"
@@ -177,7 +178,7 @@ Each list item can contain keyword/value pairs:
                             arg-words
                             "\\|")))
 
-               ;; Anything outside this range wont overlap `pt'.
+               ;; Anything outside this range won't overlap `pt'.
                (search-min (max (- pt words-max) line-beg))
                (search-max (min (+ pt words-max) line-end)))
 
@@ -212,11 +213,14 @@ Each list item can contain keyword/value pairs:
 
                    ;; Cycle word list!
                    (t
+                    ;; Find which regex group matched.
+                    ;; Groups are 1-indexed, so (match-string (1+ i)) checks word i.
                     (let ((i 0)
                           (not-found t))
                       (while (and not-found (< i words-length))
                         (cond
                          ((match-string-no-properties (1+ i))
+                          ;; Found! Decrement so (1+ i) below gives current word index.
                           (decf i)
                           (setq not-found nil))
                          (t
@@ -266,7 +270,7 @@ Each list item can contain keyword/value pairs:
       preset))))
 
 (defun cycle-at-point-impl (cycle-index fn-cache)
-  "Cycle case styles using the choice at CYCLE-INDEX.
+  "Cycle through word alternatives using CYCLE-INDEX.
 Argument FN-CACHE stores the result for reuse."
   (declare (important-return-value t))
   (pcase-let ((`(,result-choices ,word-beg ,word-end) (or fn-cache '(nil nil nil))))
@@ -280,17 +284,11 @@ Argument FN-CACHE stores the result for reuse."
           (pcase-let ((`(,words . (,beg . ,end)) (cycle-at-point--cycle-words cycle-data)))
             (cond
              ((null words)
-              (message "No cycle symbol found at point!"))
+              (message "No cycleable word found at point"))
              (t
-              (let ((target (buffer-substring-no-properties beg end)))
-                (cond
-                 ((null target)
-                  ;; Trim the string since it can contain newlines.
-                  (message "No cycle for %S found!" (string-trim target)))
-                 (t
-                  (setq result-choices words)
-                  (setq word-beg beg)
-                  (setq word-end end))))))))))
+              (setq result-choices words)
+              (setq word-beg beg)
+              (setq word-end end)))))))))
 
       (when result-choices
         (setq fn-cache (list result-choices word-beg word-end))))
@@ -308,9 +306,9 @@ Argument FN-CACHE stores the result for reuse."
 ;;;###autoload
 (defun cycle-at-point-preset (&optional preset-id quiet)
   "Load a preset for current mode.
-The first is PRESET-ID to override the current `major-mode'.
-The second is QUIET, when non-nil, don't show a message
-when the preset isn't found."
+Optional argument PRESET-ID overrides the current `major-mode'.
+Optional argument QUIET, when non-nil, suppresses messages
+when the preset is not found."
   (declare (important-return-value t))
   (unless preset-id
     (setq preset-id
@@ -326,7 +324,7 @@ when the preset isn't found."
                 t)
             (error
              (unless quiet
-               (message "cycle-at-point: preset %S not found! (%S)" preset-id err))
+               (message "cycle-at-point: preset %S not found (%S)" preset-id err))
              nil))
       (funcall preset-sym))))
 
