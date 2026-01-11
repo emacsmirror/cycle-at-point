@@ -254,7 +254,7 @@ Argument CYCLE-DATA is the list of cycle definitions to search."
                         (setq arg-words (cons word-orig (cdr arg-words)))
 
                         (unless (string-equal (downcase (car arg-words)) (downcase word-orig))
-                          (error "Internal error"))))
+                          (error "Internal error: rotated word list does not start with matched word"))))
 
                     (setq result (cons arg-words (cons beg end)))))))))))
       (incf cycle-data-index))

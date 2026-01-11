@@ -121,7 +121,7 @@ Optional keyword ARGS:
           (setq base 16)
           (setq c-search "[0-9_a-fA-F]+"))
          (t
-          (error "Internal error")))
+          (error "Internal error: unhandled prefix character %S" c)))
 
         (when (looking-at c-search)
           (let ((text (buffer-substring-no-properties pt-start (match-end 0))))
