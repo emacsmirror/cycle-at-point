@@ -149,19 +149,21 @@ Argument CYCLE-DATA is the list of cycle definitions to search."
                                     prefix
                                     cycle-data-index
                                     err))))
-                    ((listp v)) ; Valid: list of strings, continue.
+                    ((listp v)
+                     nil) ; Valid: list of strings, continue.
                     (t
-                     (error "%s: expected `:data', to be a list of strings, found %S"
-                            prefix
-                            (type-of v))))
+                     (user-error "%s: expected `:data' to be a list of strings, found %S"
+                                 prefix
+                                 (type-of v))))
                    (setq arg-words v))
                   (:case-fold
                    (cond
-                    ((memq v '(nil t))) ; Valid boolean, continue.
+                    ((memq v '(nil t))
+                     nil) ; Valid boolean, continue.
                     (t
-                     (error "%s: expected `:case-fold', to be nil or t" prefix)))
+                     (user-error "%s: expected `:case-fold' to be nil or t" prefix)))
                    (setq arg-case-fold v))
-                  (_ (error "%s: unknown argument %S" prefix arg-current)))))
+                  (_ (user-error "%s: unknown argument %S" prefix arg-current)))))
              (t
               (user-error
                "%s: (error at index %d) all arguments must be keyword, value pairs, found %S"
