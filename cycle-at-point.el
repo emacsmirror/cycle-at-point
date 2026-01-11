@@ -24,6 +24,7 @@
 ;; Require Dependencies
 
 (require 'recomplete) ; `recomplete-with-callback'.
+(require 'seq) ; `seq-subseq'.
 
 (eval-when-compile
   (require 'cycle-at-point-find-alphabet)
@@ -55,6 +56,10 @@
 
 ;; ---------------------------------------------------------------------------
 ;; Custom Variables
+
+(defgroup cycle-at-point nil
+  "Cycle through alternative values at point."
+  :group 'convenience)
 
 (defcustom cycle-at-point-preset-override nil
   "The preset name to use, when nil the `major-mode' name is used.
@@ -144,8 +149,7 @@ Argument CYCLE-DATA is the list of cycle definitions to search."
                                     prefix
                                     cycle-data-index
                                     err))))
-                    ((listp v)
-                     nil) ; Valid: list of strings, continue.
+                    ((listp v)) ; Valid: list of strings, continue.
                     (t
                      (error "%s: expected `:data', to be a list of strings, found %S"
                             prefix
@@ -153,8 +157,7 @@ Argument CYCLE-DATA is the list of cycle definitions to search."
                    (setq arg-words v))
                   (:case-fold
                    (cond
-                    ((memq v '(nil t))
-                     nil) ; Valid boolean, continue.
+                    ((memq v '(nil t))) ; Valid boolean, continue.
                     (t
                      (error "%s: expected `:case-fold', to be nil or t" prefix)))
                    (setq arg-case-fold v))
@@ -234,9 +237,9 @@ Argument CYCLE-DATA is the list of cycle definitions to search."
                           (setq arg-words
                                 (cond
                                  ((string-equal (upcase word-orig) word-orig)
-                                  (mapcar (lambda (w) (upcase w)) arg-words))
+                                  (mapcar #'upcase arg-words))
                                  ((string-equal (downcase word-orig) word-orig)
-                                  (mapcar (lambda (w) (downcase w)) arg-words))
+                                  (mapcar #'downcase arg-words))
                                  (t
                                   (mapcar
                                    (lambda (w) (upcase-initials (downcase w))) arg-words)))))
@@ -269,7 +272,7 @@ Argument CYCLE-DATA is the list of cycle definitions to search."
         (setq preset (cycle-at-point-preset "lang-en")))
       preset))))
 
-(defun cycle-at-point-impl (cycle-index fn-cache)
+(defun cycle-at-point--impl (cycle-index fn-cache)
   "Cycle through word alternatives using CYCLE-INDEX.
 Argument FN-CACHE stores the result for reuse."
   (declare (important-return-value t))
@@ -288,7 +291,7 @@ Argument FN-CACHE stores the result for reuse."
              (t
               (setq result-choices words)
               (setq word-beg beg)
-              (setq word-end end)))))))))
+              (setq word-end end)))))))
 
       (when result-choices
         (setq fn-cache (list result-choices word-beg word-end))))
@@ -326,7 +329,11 @@ when the preset is not found."
              (unless quiet
                (message "cycle-at-point: preset %S not found (%S)" preset-id err))
              nil))
-      (funcall preset-sym))))
+      (if (fboundp preset-sym)
+          (funcall preset-sym)
+        (unless quiet
+          (message "cycle-at-point: preset %S loaded but function not defined" preset-id))
+        nil))))
 
 ;;;###autoload
 (defun cycle-at-point (arg)
@@ -335,7 +342,7 @@ ARG is the offset to cycle, default is 1, -1 to cycle backwards."
   (declare (important-return-value nil))
   (interactive "*p")
   ;; Pass 1 to start at the second item (the current word is always the first).
-  (recomplete-with-callback 'cycle-at-point-impl arg 1))
+  (recomplete-with-callback #'cycle-at-point--impl arg 1))
 
 (provide 'cycle-at-point)
 ;; Local Variables:
